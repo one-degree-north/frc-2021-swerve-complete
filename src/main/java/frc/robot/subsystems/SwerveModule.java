@@ -106,7 +106,6 @@ public class SwerveModule {
     final var turnOutput =
         m_turningPIDController.calculate(getAngle(), state.angle.getRadians());
 
-    System.out.println(state.speedMetersPerSecond);
     //System.out.println("position " + m_driveEncoder.getPosition() + " drive " + m_driveEncoder.getVelocity()/1000 + "m/s State " + state.speedMetersPerSecond  + "Current" + driveOutput);
     // Calculate the turning motor output from the turning PID controller.
     m_driveMotor.set(state.speedMetersPerSecond/AutoConstants.kMaxSpeedMetersPerSecond*0.2);

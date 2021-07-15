@@ -15,6 +15,8 @@ import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
@@ -37,8 +39,12 @@ public class RobotContainer {
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
 
+  //limelight
+  NetworkTable table;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    table = NetworkTableInstance.getDefault().getTable("limelight");
     // Configure the button bindings
     configureButtonBindings();
 
@@ -62,7 +68,20 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling passing it to a
    * {@link JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+
+    JoystickButton button = new JoystickButton(m_driverController, XboxController.Button.kA.value);
+    Command target = new RunCommand(()->{
+        double targetOffsetAngle_Horizontal = -table.getEntry("tx").getDouble(0);
+        double targetOffsetAngle_Vertical = -table.getEntry("ty").getDouble(0);
+        System.out.println(table.getEntry("tx"));
+        if(Math.abs(targetOffsetAngle_Horizontal)<1){
+            targetOffsetAngle_Horizontal=0;
+        }
+        m_robotDrive.drive(0, 0, -targetOffsetAngle_Horizontal/2, false);
+    }, m_robotDrive);
+    button.toggleWhenPressed(target);
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
