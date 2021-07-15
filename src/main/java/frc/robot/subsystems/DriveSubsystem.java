@@ -55,15 +55,17 @@ public class DriveSubsystem extends SubsystemBase {
   public double getYaw(){
     double[] pidge = new double[3];
     m_gyro.getYawPitchRoll(pidge);
+    System.out.println(pidge[0]);
     return pidge[0];
   }
 
   public Rotation2d getRotation2d(){
-      return new Rotation2d(getYaw());
+      return new Rotation2d(getYaw()/360*2*Math.PI);
   }
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem() {}
+  public DriveSubsystem() {
+  }
 
   public Translation2d getTranslations(){
     return m_odometry.getPoseMeters().getTranslation().times(2.54/100);
@@ -71,9 +73,10 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic(){
+    System.out.println(getPose());
     // Update the odometry in the periodic block
     m_odometry.update(
-        new Rotation2d(getHeading()),
+        getRotation2d(),
         m_frontLeft.getState(),
         m_rearLeft.getState(),
         m_frontRight.getState(),

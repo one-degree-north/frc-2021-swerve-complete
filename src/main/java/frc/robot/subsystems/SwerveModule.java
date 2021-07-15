@@ -36,6 +36,7 @@ public class SwerveModule {
     this.m_turningEncoder = new CANCoder(encoderCAN);
     this.m_driveEncoder= m_driveMotor.getEncoder();
     m_driveEncoder.setPositionConversionFactor(Math.PI*Constants.ModuleConstants.kWheelDiameterMeters);
+    m_driveEncoder.setVelocityConversionFactor(Math.PI/360*Constants.ModuleConstants.kWheelDiameterMeters);
     resetEncoders(angleOff);
   }
 
@@ -71,9 +72,10 @@ public class SwerveModule {
       }
     }
 
-    m_driveMotor.set(state.speedMetersPerSecond/AutoConstants.kMaxSpeedMetersPerSecond*0.2);
+    m_driveMotor.set(state.speedMetersPerSecond/AutoConstants.kMaxSpeedMetersPerSecond*0.6);
     m_turningMotor.set((state.angle.getRadians()+numRot-getAngle())/(2*Math.PI));
     prevAngle=state.angle.getRadians()+numRot;
+    //System.out.println(m_driveEncoder.getVelocity());
   }
 
   /** Zeros all the SwerveModule encoders. */
