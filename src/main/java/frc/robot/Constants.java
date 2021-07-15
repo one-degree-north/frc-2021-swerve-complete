@@ -28,12 +28,16 @@ public final class Constants {
     public static final int kFrontRightTurningMotorPort = 1;
     public static final int kRearRightTurningMotorPort = 5;
 
-    
+    public static final int kFrontLeftEncoderPort = 9;
+    public static final int kRearLeftEncoderPort = 10;
+    public static final int kFrontRightEncoderPort = 12;
+    public static final int kRearRightEncoderPort = 11;
 
-    public static final double kTrackWidth = 18.5*2.54/100;
     // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = 18.5*2.54/100;
+    public static final double kTrackWidth = 18.5*2.54/100;
     // Distance between front and back wheels on robot
+    public static final double kWheelBase = 18.5*2.54/100;
+
     public static final SwerveDriveKinematics kDriveKinematics =
         new SwerveDriveKinematics(
             new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -43,24 +47,11 @@ public final class Constants {
 
     public static final boolean kGyroReversed = false;
 
-    // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
-    // These characterization values MUST be determined either experimentally or theoretically
-    // for *your* robot's drive.
-    // The RobotPy Characterization Toolsuite provides a convenient tool for obtaining these
-    // values for your robot.
-
     public static final double kMaxSpeedMetersPerSecond = 1;
   }
 
   public static final class ModuleConstants {
-    public static final double kMaxModuleAngularSpeedRadiansPerSecond = 2 * Math.PI;
-    public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = Math.PI/8;
-
     public static final double kWheelDiameterMeters = 4*2.54/100;
-
-    public static final double kPModuleTurningController = 1;
-
-    public static final double kPModuleDriveController = 1;
   }
 
   public static final class OIConstants {

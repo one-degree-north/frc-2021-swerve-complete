@@ -22,19 +22,35 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class DriveSubsystem extends SubsystemBase {
   // Robot swerve modules
   private final SwerveModule m_frontLeft =
-      new SwerveModule(DriveConstants.kFrontLeftDriveMotorPort,DriveConstants.kFrontLeftTurningMotorPort,9,-18.721);
+      new SwerveModule(
+        DriveConstants.kFrontLeftDriveMotorPort, 
+        DriveConstants.kFrontLeftTurningMotorPort,
+        DriveConstants.kFrontLeftEncoderPort,-18.721);
+
   private final SwerveModule m_rearLeft =
-      new SwerveModule(DriveConstants.kRearLeftDriveMotorPort,DriveConstants.kRearLeftTurningMotorPort,10,71.455);
+      new SwerveModule(
+        DriveConstants.kRearLeftDriveMotorPort, 
+        DriveConstants.kRearLeftTurningMotorPort,
+        DriveConstants.kRearLeftEncoderPort,71.455);
       
   private final SwerveModule m_frontRight =
-      new SwerveModule(DriveConstants.kFrontRightDriveMotorPort,DriveConstants.kFrontRightTurningMotorPort,12,93.164);
+      new SwerveModule(
+        DriveConstants.kFrontRightDriveMotorPort, 
+        DriveConstants.kFrontRightTurningMotorPort,
+        DriveConstants.kFrontRightEncoderPort,93.164);
       
   private final SwerveModule m_rearRight =
-      new SwerveModule(DriveConstants.kRearRightDriveMotorPort,DriveConstants.kRearRightTurningMotorPort,11,55.283);
-
+      new SwerveModule(
+        DriveConstants.kRearRightDriveMotorPort, 
+        DriveConstants.kRearRightTurningMotorPort,
+        DriveConstants.kRearRightEncoderPort,55.283);
 
   // The gyro sensor
   private final PigeonIMU m_gyro = new PigeonIMU(13);
+
+  // Odometry class for tracking robot pose
+  private final SwerveDriveOdometry m_odometry =
+      new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getRotation2d());
 
   public double getYaw(){
     double[] pidge = new double[3];
@@ -45,10 +61,6 @@ public class DriveSubsystem extends SubsystemBase {
   public Rotation2d getRotation2d(){
       return new Rotation2d(getYaw());
   }
-
-  // Odometry class for tracking robot pose
-  SwerveDriveOdometry m_odometry =
-      new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getRotation2d());
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {}
@@ -121,14 +133,6 @@ public class DriveSubsystem extends SubsystemBase {
     m_frontRight.setDesiredState(desiredStates[1]);
     m_rearLeft.setDesiredState(desiredStates[2]);
     m_rearRight.setDesiredState(desiredStates[3]);
-  }
-
-  /** Resets the drive encoders to currently read a position of 0. */
-  public void resetEncoders() {
-    m_frontLeft.resetEncoder();
-    m_rearLeft.resetEncoder();
-    m_frontRight.resetEncoder();
-    m_rearRight.resetEncoder();
   }
 
   /** Zeroes the heading of the robot. */
