@@ -25,25 +25,25 @@ public class DriveSubsystem extends SubsystemBase {
       new SwerveModule(
         DriveConstants.kFrontLeftDriveMotorPort, 
         DriveConstants.kFrontLeftTurningMotorPort,
-        DriveConstants.kFrontLeftEncoderPort,-18.721);
+        DriveConstants.kFrontLeftEncoderPort,-20.83);
 
   private final SwerveModule m_rearLeft =
       new SwerveModule(
         DriveConstants.kRearLeftDriveMotorPort, 
         DriveConstants.kRearLeftTurningMotorPort,
-        DriveConstants.kRearLeftEncoderPort,71.455);
+        DriveConstants.kRearLeftEncoderPort,72.510);
       
   private final SwerveModule m_frontRight =
       new SwerveModule(
         DriveConstants.kFrontRightDriveMotorPort, 
         DriveConstants.kFrontRightTurningMotorPort,
-        DriveConstants.kFrontRightEncoderPort,93.164);
+        DriveConstants.kFrontRightEncoderPort,95.098);
       
   private final SwerveModule m_rearRight =
       new SwerveModule(
         DriveConstants.kRearRightDriveMotorPort, 
         DriveConstants.kRearRightTurningMotorPort,
-        DriveConstants.kRearRightEncoderPort,55.283);
+        DriveConstants.kRearRightEncoderPort,48.076);
 
   // The gyro sensor
   private final PigeonIMU m_gyro = new PigeonIMU(13);
@@ -55,7 +55,6 @@ public class DriveSubsystem extends SubsystemBase {
   public double getYaw(){
     double[] pidge = new double[3];
     m_gyro.getYawPitchRoll(pidge);
-    System.out.println(pidge[0]);
     return pidge[0];
   }
 
@@ -65,6 +64,15 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+    
+  }
+
+  public void resetAllEncoders(){
+    m_frontLeft.resetEncoders(-20.83);
+    m_rearLeft.resetEncoders(72.510);
+    m_frontRight.resetEncoders(95.098);
+    m_rearRight.resetEncoders(48.076);
+ 
   }
 
   public Translation2d getTranslations(){
@@ -73,7 +81,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic(){
-    System.out.println(getPose());
     // Update the odometry in the periodic block
     m_odometry.update(
         getRotation2d(),

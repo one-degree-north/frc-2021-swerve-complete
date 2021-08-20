@@ -12,7 +12,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import frc.robot.Constants;
-import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
 
 public class SwerveModule {
   private final CANSparkMax m_driveMotor;
@@ -48,34 +48,36 @@ public class SwerveModule {
   public SwerveModuleState getState() {
     return new SwerveModuleState(m_driveEncoder.getVelocity(), new Rotation2d(getAngle()));
   }
-
+  double getAng;
   public double getAngle(){
-    return m_turningEncoder.getPosition()/180*Math.PI;
+    getAng=(m_turningEncoder.getPosition()/180*Math.PI);
+    if(getAng>Math.PI){
+      getAng-=2*Math.PI;
+    }
+    else if(getAng<-Math.PI){
+      getAng+=2*Math.PI;
+    }
+    return getAng;
   }
-
-  
   /**
    * Sets the desired state for the module.
    *
    * @param state Desired state with speed and angle.
    */
-  double numRot=0;
-  double prevAngle;
   public void setDesiredState(SwerveModuleState state) {
-    // Calculate the drive output from the drive PID controller.
-    if(Math.abs(prevAngle-(state.angle.getRadians()+numRot))>Math.PI){
-      if(prevAngle>state.angle.getRadians()+numRot){
-        numRot+=2*Math.PI;
-      }
-      else{
-        numRot-=2*Math.PI;
-      }
-    }
+    double angle = state.angle.getRadians();
+    int flipper = 1;
+    if(Math.abs(angle-getAngle())<=2*Math.PI/3) {
 
-    m_driveMotor.set(state.speedMetersPerSecond/AutoConstants.kMaxSpeedMetersPerSecond*0.6);
-    m_turningMotor.set((state.angle.getRadians()+numRot-getAngle())/(2*Math.PI));
-    prevAngle=state.angle.getRadians()+numRot;
-    //System.out.println(m_driveEncoder.getVelocity());
+    } else if(angle-getAngle()>0) {
+      flipper = -flipper;
+      angle -= Math.PI;
+    } else if(angle-getAngle()<0) {
+      flipper = -flipper;
+      angle += Math.PI;
+    }
+    m_driveMotor.set(state.speedMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond*flipper);
+    m_turningMotor.set((angle-getAngle())/(2*Math.PI));
   }
 
   /** Zeros all the SwerveModule encoders. */
